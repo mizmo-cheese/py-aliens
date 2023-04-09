@@ -24,9 +24,8 @@ class AlienInvasion:
 
         pygame.display.set_caption("Alien Invasion")
 
-
-        self.bullet = pygame.sprite.Group
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
 
 
     def _check_events(self):
@@ -40,33 +39,45 @@ class AlienInvasion:
                    self.keyup_event(event)
                 
     def keydown_event(self, event):
-        if event.key == pygame.K_RIGHT:
+        if event.key == pygame.K_RIGHT:#нажата K_RIGHT
           self.ship.moving_right = True
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_LEFT:#нажата K_LEFT
             self.ship.moving_left = True
 
         elif event.key == pygame.K_F9:
             sys.exit()
+        
+        elif event.key == pygame.K_SPACE:
+            self.fire_bullet()
     
     def keyup_event(self, event):  
-         if event.key == pygame.K_RIGHT:
+         if event.key == pygame.K_RIGHT: #отпущена K_RIGHT
             self.ship.moving_right = False
-         if event.key == pygame.K_LEFT:
+         if event.key == pygame.K_LEFT: #отпущена K_LEFT
             self.ship.moving_left = False 
+        
+    def fire_bullet(self):
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
 
 # "updating screen"
     def _screen_update(self):
-        self.screen.fill(self.settings.bgcolor)
-        self.ship.blitme()
+        self.screen.fill(self.settings.bgcolor) #Заливка фона
+        self.ship.blitme() #Отображение корабля
            
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullets()
+            
+        
         pygame.display.flip()
 
     def run_game(self):
       while True:
-          self._check_events()
-          self.ship.update()
-          self._screen_update()
-          self.bullet.update()
+          self._check_events()#Проверка ивентов
+          self.ship.update()#Обновление корабля
+          self.bullets.update()#Обновление bullet
+
+          self._screen_update() #Обновление экрана
 
     
 
